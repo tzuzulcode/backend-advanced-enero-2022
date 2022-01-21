@@ -1,14 +1,21 @@
 const {Router} = require("express")
-
+const Users = require("../services/users")
 function users(app){
     const router = Router()
+
+    //Utilizando el servicio
+    const usersServ = new Users()
+
     app.use("/api/users",router)
     
-    router.get("/",(req,res)=>{
-        return res.send("GET users")
+    router.get("/",async (req,res)=>{
+        const users = await usersServ.getAll()
+        return res.json(users)
     })
-    router.get("/:idUsuario",(req,res)=>{
-        return res.send("GET user")
+    router.get("/:email",async (req,res)=>{
+        const {email} = req.params
+        const user = await usersServ.get(email)
+        return res.json(user)
     })
     
 }

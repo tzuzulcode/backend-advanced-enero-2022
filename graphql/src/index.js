@@ -8,8 +8,10 @@ connection()
 const graphql = require('./routes/graphql')
 const users = require('./routes/users')
 
-
 const app = express()
+
+// Agregando middleware para body parsing
+app.use(express.json())
 
 graphql(app)
 users(app)
