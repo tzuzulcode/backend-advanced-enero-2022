@@ -1,8 +1,12 @@
 const express = require("express")
 
+//DB
+const {connection} = require("./config/db")
+connection()
+
 //Importando routes
-const graphql = require('./src/routes/graphql')
-const users = require('./src/routes/users')
+const graphql = require('./routes/graphql')
+const users = require('./routes/users')
 
 
 const app = express()
@@ -14,7 +18,7 @@ users(app)
 
 
 app.get('/',(req,res)=>{
-    return res.send("Hola, bienvenido")
+    return res.send("Hola, bienvenido. Cambios")
 })
 
 app.listen(4000,()=>{
