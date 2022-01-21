@@ -3,6 +3,8 @@ const express = require("express")
 //Importando routes
 const graphql = require('./src/routes/graphql')
 const users = require('./src/routes/users')
+
+
 const app = express()
 
 graphql(app)
@@ -16,5 +18,5 @@ app.get('/',(req,res)=>{
 })
 
 app.listen(4000,()=>{
-    console.log("Listening on port 8000!")
+    console.log("Listening on port 4000!")
 })

@@ -1,15 +1,6 @@
-//const {Router} = require("express")
-const root = {
-    hello:()=>{
-        return 'Hola mundo'
-    }
-}
+const { graphqlHTTP } = require("express-graphql")
+const {root,schemas} = require("../libs/graphql")
 
-let schemas = buildSchema(`
-    type Query{
-        hello: String
-    }
-`)
 function graphql(app){
     //const router = Router()
     app.use('/graphql',graphqlHTTP({

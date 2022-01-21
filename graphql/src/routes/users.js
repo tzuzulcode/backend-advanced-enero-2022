@@ -7,6 +7,9 @@ function users(app){
     router.get("/",(req,res)=>{
         return res.send("GET users")
     })
+    router.get("/:idUsuario",(req,res)=>{
+        return res.send("GET user")
+    })
     
 }
 
