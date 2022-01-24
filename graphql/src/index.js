@@ -7,6 +7,7 @@ connection()
 //Importando routes
 const graphql = require('./routes/graphql')
 const users = require('./routes/users')
+const products = require('./routes/products')
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(express.json())
 
 graphql(app)
 users(app)
+products(app)
 
 //Middleware
 

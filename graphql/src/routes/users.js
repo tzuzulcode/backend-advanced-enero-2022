@@ -17,6 +17,10 @@ function users(app){
         const user = await usersServ.get(email)
         return res.json(user)
     })
+    router.post("/",async (req,res)=>{
+        const user = await usersServ.create(req.body)
+        return res.json(user)
+    })
     
 }
 

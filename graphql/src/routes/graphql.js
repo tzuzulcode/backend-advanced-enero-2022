@@ -6,8 +6,9 @@ function graphql(app){
     app.use('/graphql',graphqlHTTP({
         graphiql:true,//Habilita el sandbox
         rootValue:root,//Lista los schemas para consolta
-        schema:schemas// Estrcutrura de la información
+        schema:schemas// Estructura de la información
     }))
+
     
 }
 
