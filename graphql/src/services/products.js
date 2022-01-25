@@ -1,17 +1,31 @@
 const ProductModel = require("../models/products")
 class Products{
-    async get(params){
-        return await ProductModel.find(params).exec()
+    async get(query){
+        if(query.categories){
+            query.categories = {
+                $all:query.categories
+            }
+        }
+        return await ProductModel.findOne(query).exec()
     }
 
-    async getAll(){
-        return await ProductModel.find()
+    async getAll(query){
+        if(query.categories){
+            query.categories = {
+                $all:query.categories
+            }
+        }
+        return await ProductModel.find(query)
     }
 
-    async create(data){
-        const product = await ProductModel.create(data)
+    async create(query){
+       return await ProductModel.create(query.product)
 
-        return {product,success:true}
+    }
+    async update(query){
+        // Reto corregir
+        return await ProductModel.findOneAndUpdate({id:query.id},query.product)
+        //return await ProductModel.findByIdAndUpdate(query.id,data.product)
     }
 }
 

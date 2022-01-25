@@ -14,7 +14,7 @@ function products(app){
     })
     router.get("/:id",async (req,res)=>{
         const {id} = req.params
-        const product = await productsServ.get(id)
+        const product = await productsServ.get({id})
         return res.json(product)
     })
     router.post("/",async (req,res)=>{

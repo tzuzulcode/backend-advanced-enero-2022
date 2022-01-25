@@ -12,24 +12,27 @@ const root = {
     // me:async ()=>{
     //     return await usersServ.get()
     // }
-    users:async ()=>{
-        return await usersServ.getAll()
-    },
-    products:async()=>{
-        return await productsServ.getAll()
-    },
-    getProductsByName:async (args)=>{
-        return await productsServ.get(args)
-    }
+    users:usersServ.getAll,
+    product:productsServ.get,
+    products:productsServ.getAll,
+    createProduct:productsServ.create,
+    updateProduct:productsServ.update
 }
 
 let schemas = buildSchema(`
+    input ProductInput{
+        name:String
+        description:String
+        categories:[String]
+        stock:Int
+        price:Float
+    }
     type Query{
         hello: String
         me: User
         users: [User]
-        products: [Product]
-        getProductsByName(name:String):[Product]
+        product(id:String,name:String,categories:[String]):Product
+        products(name:String,categories:[String]): [Product]
     }
 
     type User{
@@ -38,11 +41,17 @@ let schemas = buildSchema(`
         id:String
     }
     type Product{
+        id:String
         name:String
         description:String
         categories:[String]
         stock:Int
         price:Float
+    }
+
+    type Mutation{
+        createProduct(product: ProductInput): Product
+        updateProduct(id:String!, product: ProductInput): Product
     }
 `)
 
