@@ -13,6 +13,7 @@ const root = {
     //     return await usersServ.get()
     // }
     users:usersServ.getAll,
+    updateUser:usersServ.update,
     product:productsServ.get,
     products:productsServ.getAll,
     createProduct:productsServ.create,
@@ -27,10 +28,14 @@ let schemas = buildSchema(`
         stock:Int
         price:Float
     }
+    input UserInput{
+        role:String
+        name:String
+    }
     type Query{
         hello: String
         me: User
-        users: [User]
+        users(role:String): [User]
         product(id:String,name:String,categories:[String]):Product
         products(name:String,categories:[String]): [Product]
     }
@@ -38,6 +43,7 @@ let schemas = buildSchema(`
     type User{
         name: String
         email: String
+        role: String
         id:String
     }
     type Product{
@@ -50,6 +56,7 @@ let schemas = buildSchema(`
     }
 
     type Mutation{
+        updateUser(id:String!,user:UserInput):User
         createProduct(product: ProductInput): Product
         updateProduct(id:String!, product: ProductInput): Product
     }

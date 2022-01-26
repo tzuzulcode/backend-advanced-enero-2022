@@ -6,6 +6,7 @@ connection()
 
 //Importando routes
 const graphql = require('./routes/graphql')
+const apollo = require('./routes/apollo')
 const users = require('./routes/users')
 const products = require('./routes/products')
 
@@ -14,7 +15,7 @@ const app = express()
 // Agregando middleware para body parsing
 app.use(express.json())
 
-graphql(app)
+//graphql(app)
 users(app)
 products(app)
 

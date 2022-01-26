@@ -24,7 +24,7 @@ class Products{
     }
     async update(query){
         // Reto corregir
-        return await ProductModel.findOneAndUpdate({id:query.id},query.product)
+        return await ProductModel.findOneAndUpdate({_id:query.id},query.product,{new:true})
         //return await ProductModel.findByIdAndUpdate(query.id,data.product)
     }
 }

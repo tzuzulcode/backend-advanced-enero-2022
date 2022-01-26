@@ -4,8 +4,8 @@ class Users{
         return await UserModel.findOne({email}).exec()
     }
 
-    async getAll(){
-        return await UserModel.find()
+    async getAll(query){
+        return await UserModel.find(query)
     }
 
     async create(data){
@@ -14,6 +14,11 @@ class Users{
         const user = await UserModel.create(data)
 
         return {user,success:true}
+    }
+    async update(query){
+        // const user = UserModel(data)
+        // await user.save()
+        return await UserModel.findOneAndUpdate({_id:query.id},query.user,{new:true})
     }
 }
 

@@ -5,7 +5,7 @@ function graphql(app){
     //const router = Router()
     app.use('/graphql',graphqlHTTP({
         graphiql:true,//Habilita el sandbox
-        rootValue:root,//Lista los schemas para consolta
+        rootValue:root,//Lista los schemas para consulta
         schema:schemas// Estructura de la información
     }))
 
