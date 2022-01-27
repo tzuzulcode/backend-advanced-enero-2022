@@ -5,6 +5,7 @@ class Users{
     }
 
     async getAll(query){
+        console.log(query)
         return await UserModel.find(query)
     }
 

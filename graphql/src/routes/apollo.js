@@ -9,14 +9,10 @@ function apollo(app){
     })
     
     server.start()
-    .then(res=>{
-        server.applyMiddleware({app})
+    .then((res)=>{
+        server.applyMiddleware({app,path:"/apollo"})
         console.log(server.graphqlPath)
     })
-
-    
-
-    
     
 }
 

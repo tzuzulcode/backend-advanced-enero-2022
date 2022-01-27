@@ -1,6 +1,9 @@
 const {gql} = require("apollo-server-express")
 //const {makeExecutableSchema} = require("graphql-tools")
-const {root} = require("./graphql")
+const Users = require("../services/users")
+const Products = require("../services/products")
+const usersServ = new Users()
+const productsServ = new Products()
 
 const schema = gql`
 input ProductInput{
@@ -45,7 +48,22 @@ type Mutation{
 `
 
 const resolvers = {
-    Query: root,
+    Query:{
+        users:(parent, args, context, info)=>{
+            return usersServ.getAll(args)
+        },
+        product:(parent, args, context, info)=>{
+            return productsServ.get(args)
+        },
+        products:(parent, args, context, info)=>{
+            return productsServ.getAll(args)
+        },
+    },
+    Mutation:{
+        updateUser:(parent, args, context, info)=>usersServ.update(args),
+        createProduct:(parent, args, context, info)=>productsServ.create(args),
+        updateProduct:(parent, args, context, info)=>productsServ.update(args)
+    }
 };
 
 module.exports = {schema,resolvers}
