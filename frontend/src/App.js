@@ -1,36 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import {useQuery,gql, useMutation} from '@apollo/client'
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  useQuery,
-  gql
-} from "@apollo/client";
+const query = gql`
+  query Users {
+    users {
+      name
+      email
+      role
+      id
+    }
+  }
+`
 
-const client = new ApolloClient({
-  uri: 'http://localhost:8000/apollo',
-  cache: new InMemoryCache()
-});
+const mutation = gql`
+  mutation UpdateUser($id:String!,$user:UserInput){
+    updateUser(id:$id,user:$user){
+      id
+      name
+      role
+    }
+  }
+`
 
 function App() {
+  const {loading,data,error} = useQuery(query)
+  const [mutate,{loading:mutationLoading,data:mutationData,error:mutationError}] = useMutation(mutation)
+
+  const changeRole = () =>{
+    mutate({variables:{id:"61f3ed74a5b1710b84709b0c",user:{role:"ADMIN"}}})
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Queries</p>
+
+      {loading?<p>Loading</p>:
+        error?<p>Error....</p>:
+        <div>
+          {data.users?.map(user=><p key={user.id}>{user.name} {user.role}</p>)}
+        </div>
+      }
+
+      <button onClick={changeRole}>Cambiar rol</button>
+      {mutationError&&<p>{console.log(mutationError)}</p>}
     </div>
   );
 }

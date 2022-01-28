@@ -60,7 +60,10 @@ const resolvers = {
         },
     },
     Mutation:{
-        updateUser:(parent, args, context, info)=>usersServ.update(args),
+        updateUser:(parent, args, context, info)=>{
+            console.log(args)
+            return usersServ.update(args)
+        },
         createProduct:(parent, args, context, info)=>productsServ.create(args),
         updateProduct:(parent, args, context, info)=>productsServ.update(args)
     }
