@@ -1,5 +1,7 @@
 import './App.css';
 import {useQuery,gql, useMutation} from '@apollo/client'
+import axios from 'axios'
+import { useEffect } from 'react';
 
 const query = gql`
   query Users {
@@ -12,6 +14,17 @@ const query = gql`
   }
 `
 
+const queryGraphQL = `
+query Users {
+  users {
+    name
+    email
+    role
+    id
+  }
+}
+`
+
 const mutation = gql`
   mutation UpdateUser($id:String!,$user:UserInput){
     updateUser(id:$id,user:$user){
@@ -22,6 +35,8 @@ const mutation = gql`
   }
 `
 
+
+
 function App() {
   const {loading,data,error} = useQuery(query)
   const [mutate,{loading:mutationLoading,data:mutationData,error:mutationError}] = useMutation(mutation)
@@ -29,6 +44,15 @@ function App() {
   const changeRole = () =>{
     mutate({variables:{id:"61f3ed74a5b1710b84709b0c",user:{role:"ADMIN"}}})
   }
+
+  useEffect(()=>{
+    axios.post("http://localhost:8000/graphql",{
+      query:queryGraphQL
+    }).then(res=>{
+      console.log(res.data)
+    })
+  })
+
   return (
     <div>
       <p>Queries</p>
