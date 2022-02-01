@@ -19,7 +19,9 @@ class Users{
     async update(query){
         // const user = UserModel(data)
         // await user.save()
-        return await UserModel.findOneAndUpdate({_id:query.id},query.user,{new:true})
+        const user = await UserModel.findOneAndUpdate({_id:query.id},query.user,{new:true})
+        user.password = undefined
+        return user
     }
 }
 

@@ -21,6 +21,10 @@ function users(app){
         const user = await usersServ.create(req.body)
         return res.json(user)
     })
+    router.put("/:id",async (req,res)=>{
+        const user = await usersServ.update({id:req.params.id,user:req.body})
+        return res.json(user)
+    })
     
 }
 
