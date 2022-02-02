@@ -9,14 +9,15 @@ class Auth{
         const user = await this.users.get(data.email)
 
         if(user && user.password===data.password){
-            user.password = undefined
-            user.__v = undefined
+            const data = {
+                email:user.email,
+                role:user.role
+            }
 
-
-            const token = jwt.sign({...user},"12345",{expiresIn:"1d"})
+            const token = jwt.sign(data,"12345",{expiresIn:"1d"})
             return{
                 logged:true,
-                user,
+                data,
                 token,
                 message:"Inicio correcto"
             }

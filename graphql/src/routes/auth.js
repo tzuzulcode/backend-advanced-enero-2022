@@ -13,6 +13,8 @@ function auth(app){
         if(details.logged){
             return res.cookie("token",details.token,{
                 httpOnly:true,
+                sameSite:"none",
+                secure:true
             }).json(details)
         }
 
@@ -21,10 +23,14 @@ function auth(app){
     })
     router.post("/validate",async (req,res)=>{
 
-        const details = await authServ.verify(req.cookies.token)
+        if(req.cookies.token){
+            const details = await authServ.verify(req.cookies.token)
+            if(details.role==="ADMIN"){
+                return res.json({allowed:true})
+            }
+        }
         
-        return res.json(details)
-       
+        return res.status(403).json({allowed:false})
     })
 }
 

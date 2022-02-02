@@ -1,11 +1,12 @@
 const { ApolloServer } = require("apollo-server-express")
-const {schema,resolvers} = require("../libs/apollo")
+const {schema,resolvers,context} = require("../libs/apollo")
 
 function apollo(app){
     //const router = Router()
     const server = new ApolloServer({
         typeDefs:schema,
-        resolvers
+        resolvers,
+        context
     })
     
     server.start()
