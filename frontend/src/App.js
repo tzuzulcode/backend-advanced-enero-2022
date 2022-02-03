@@ -38,7 +38,9 @@ const mutation = gql`
 
 
 function App() {
-  const {loading,data,error} = useQuery(query)
+  const {loading,data,error} = useQuery(query,{
+    
+  })
   const [mutate,{loading:mutationLoading,data:mutationData,error:mutationError}] = useMutation(mutation)
 
   const changeRole = () =>{
@@ -51,11 +53,20 @@ function App() {
     }).then(res=>{
       console.log(res.data)
     })
+
+    axios.post("http://localhost:8000/api/auth/login",{
+      "email":"mail@tzuzulcode.com",
+      "password":"12345abc"
+    },{
+      withCredentials:true
+    }).then(res=>console.log(res))
   })
 
   return (
     <div>
       <p>Queries</p>
+
+      {console.log(data)}
 
       {loading?<p>Loading</p>:
         error?<p>Error....</p>:
@@ -66,6 +77,8 @@ function App() {
 
       <button onClick={changeRole}>Cambiar rol</button>
       {mutationError&&<p>{console.log(mutationError)}</p>}
+
+
     </div>
   );
 }
