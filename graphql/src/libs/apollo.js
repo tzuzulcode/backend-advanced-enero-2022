@@ -1,4 +1,4 @@
-const {gql} = require("apollo-server-express")
+const {gql,AuthenticationError} = require("apollo-server-express")
 const jwt = require("jsonwebtoken")
 //const {makeExecutableSchema} = require("graphql-tools")
 const Users = require("../services/users")
@@ -55,9 +55,8 @@ const resolvers = {
             if(context.role==="ADMIN"){
                 return usersServ.getAll(args)
             }else{
-                return []
+                return new AuthenticationError("No tienes permisos")
             }
-            
         },
         product:(parent, args, context, info)=>{
             return productsServ.get(args)
@@ -84,7 +83,9 @@ const context = ({req})=>{
         const {email,role} = jwt.verify(token,"12345")
         return {email,role}
     }else{
-        return {role:"UNAUTHENTICATED"}
+        return {
+            role:"UNAUTHENTICATED"
+        }
     }
 }
 

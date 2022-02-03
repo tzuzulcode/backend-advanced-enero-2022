@@ -1,4 +1,4 @@
-const { buildSchema } = require("graphql")
+const { buildSchema,GraphQLError } = require("graphql")
 const Users = require("../services/users")
 const Products = require("../services/products")
 const usersServ = new Users()
@@ -12,7 +12,14 @@ const root = {
     // me:async ()=>{
     //     return await usersServ.get()
     // }
-    users:usersServ.getAll,
+    users:(query,context)=>{
+        if(context.role==="ADMIN"){
+            return usersServ.getAll(query)
+        }else{
+            return new GraphQLError("No tienes permisos")
+        }
+        
+    },
     updateUser:usersServ.update,
     product:productsServ.get,
     products:productsServ.getAll,

@@ -11,7 +11,14 @@ function apollo(app){
     
     server.start()
     .then((res)=>{
-        server.applyMiddleware({app,path:"/apollo"})
+        server.applyMiddleware({
+            app,
+            path:"/apollo",
+            cors:{
+                credentials:true,
+                origin:["http://localhost:3000","https://studio.apollographql.com"]
+            }
+        })
         console.log(server.graphqlPath)
     })
     
