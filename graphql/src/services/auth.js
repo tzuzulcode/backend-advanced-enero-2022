@@ -1,3 +1,4 @@
+const { jwt_scret } = require("../config")
 const Users = require("./users")
 const jwt = require("jsonwebtoken")
 class Auth{
@@ -14,7 +15,7 @@ class Auth{
                 role:user.role
             }
 
-            const token = jwt.sign(data,"12345",{expiresIn:"1d"})
+            const token = jwt.sign(data,jwt_scret,{expiresIn:"1d"})
             return{
                 logged:true,
                 data,
@@ -30,7 +31,7 @@ class Auth{
     }
 
     async verify(token){
-        const user = jwt.verify(token,"12345")
+        const user = jwt.verify(token,jwt_scret)
         console.log(user)
 
         return user

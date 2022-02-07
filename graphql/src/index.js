@@ -1,3 +1,4 @@
+const { port, oauthClientID, oauthClientSecret, oauthCallbackURL } = require("./config")
 const express = require("express")
 const cors = require("cors")
 const cookie = require("cookie-parser")
@@ -17,7 +18,6 @@ const auth = require('./routes/auth')
 
 const app = express()
 
-
 //Middleware
 // Agregando middleware para body parsing
 app.use(express.json())
@@ -29,13 +29,11 @@ app.use(cookie())
 app.use(passport.initialize())
 
 passport.use(new GoogleStrategy({
-    clientID:"982539754927-1hvt50qhhbmsrivgleq3m6gstbp5na4c.apps.googleusercontent.com",
-    clientSecret:"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",
-    callbackURL:"http://localhost:8000/google/callback",
+    clientID:oauthClientID,
+    clientSecret:oauthClientSecret,
+    callbackURL:oauthCallbackURL,
     passReqToCallback:true
 },(req,accessToken, refreshToken, profile, cb)=>{
-    console.log(accessToken)
-    console.log("REQUEST",req)
     cb(null,{profile,accessToken})
 }))
 
@@ -51,21 +49,21 @@ app.get("/google",passport.authenticate("google",{
     scope:['email','profile']
 }))
 
+// app.get("/google/callback",passport.authenticate("google"),(req,res)=>{
+//     return res.json({message:"Hola"})
+// })
 app.get("/google/callback",(req,res)=>{
-    passport.authenticate("google",(error,details)=>{
-        console.log(error)
-        console.log(details)
-        return res.redirect("/")
-    })
-
-    return res.json({message:"Error!"})
+    return passport.authenticate("google",(error,data)=>{
+        return res.json({message:"Hola",data})
+    })(req,res) // asegurandonos que res y req esten en el scope
 })
 
+// Reto: Pasar Passport hacia las rutas e integrarlo a los servicios
 
 app.get('/',(req,res)=>{
     return res.send("Hola, bienvenido. Cambios")
 })
 
-app.listen(4000,()=>{
+app.listen(port,()=>{
     console.log("Listening on port 4000!")
 })
