@@ -51,11 +51,14 @@ app.get("/google",passport.authenticate("google",{
     scope:['email','profile']
 }))
 
-app.get("/google/callback",passport.authenticate("google",(error,details)=>{
-    console.log(error)
-    console.log(details)
-}),(req,res)=>{
-    return res.redirect("/")
+app.get("/google/callback",(req,res)=>{
+    passport.authenticate("google",(error,details)=>{
+        console.log(error)
+        console.log(details)
+        return res.redirect("/")
+    })
+
+    return res.json({message:"Error!"})
 })
 
 
