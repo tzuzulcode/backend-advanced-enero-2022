@@ -1,7 +1,7 @@
 const UserModel = require("../models/users")
 class Users{
-    async get(email){
-        return await UserModel.findOne({email}).exec()
+    async get(data){
+        return await UserModel.findOne(data).exec()
     }
 
     async getAll(query){

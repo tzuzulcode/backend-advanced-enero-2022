@@ -1,5 +1,6 @@
 const {Router} = require("express")
 const Auth = require("../services/auth")
+const passport = require("passport")
 function auth(app){
     const router = Router()
 
@@ -31,6 +32,24 @@ function auth(app){
         }
         
         return res.status(403).json({allowed:false})
+    })
+
+    router.get("/google",passport.authenticate("google",{
+        scope:['email','profile']
+    }))
+    
+    // app.get("/google/callback",passport.authenticate("google"),(req,res)=>{
+    //     return res.json({message:"Hola"})
+    // })
+    router.get("/google/callback",(req,res)=>{
+        return passport.authenticate("google",async (data)=>{
+            const details = await authServ.google(data.profile)
+            return res.cookie("token",details.token,{
+                httpOnly:true,
+                sameSite:"none",
+                secure:true
+            }).json(details)
+        })(req,res) // asegurandonos que res y req esten en el scope
     })
 }
 
