@@ -12,15 +12,31 @@ function auth(app){
     router.post("/login",async (req,res)=>{
         const details = await authServ.login(req.body)
         if(details.logged){
+            const now = new Date().getDate()
+            const expires = new Date(new Date().setDate(now+7))
+            console.log(expires)
             return res.cookie("token",details.token,{
                 httpOnly:true,
                 sameSite:"none",
-                secure:true
+                secure:true,
+                expires
             }).json(details)
         }
 
         return res.status(401).json(details)
        
+    })
+
+    router.post("/logout",(req,res)=>{
+        const details ={
+            loggedOut:true
+        }
+        return res.cookie("token","",{
+            httpOnly:true,
+            sameSite:"none",
+            secure:true,
+            expires: new Date()
+        }).json(details)
     })
     router.post("/validate",async (req,res)=>{
 
@@ -48,7 +64,8 @@ function auth(app){
                 httpOnly:true,
                 sameSite:"none",
                 secure:true
-            }).json(details)
+            }).redirect("http://localhost:3000")
+            // }).send("<script>window.close()</script>")
         })(req,res) // asegurandonos que res y req esten en el scope
     })
 }

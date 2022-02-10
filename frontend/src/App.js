@@ -54,13 +54,23 @@ function App() {
       console.log(res.data)
     })
 
+    
+  })
+
+
+  const login = ()=>{
     axios.post("http://localhost:8000/api/auth/login",{
       "email":"mail@tzuzulcode.com",
       "password":"12345abc"
     },{
       withCredentials:true
     }).then(res=>console.log(res))
-  })
+  }
+  const logout = ()=>{
+    axios.post("http://localhost:8000/api/auth/logout",{},{
+      withCredentials:true
+    }).then(res=>console.log(res))
+  }
 
   return (
     <div>
@@ -75,9 +85,13 @@ function App() {
         </div>
       }
 
+      <button onClick={login}>Iniciar sesión</button>
+      <button onClick={logout}>Cerrar sesión</button>
+
+      <a href='http://localhost:8000/api/auth/google'>Iniciar con Google</a>
+
       <button onClick={changeRole}>Cambiar rol</button>
       {mutationError&&<p>{console.log(mutationError)}</p>}
-
 
     </div>
   );
