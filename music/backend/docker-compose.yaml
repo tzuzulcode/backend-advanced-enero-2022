@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=musicapp
+
+  app:
+    build: .
+    container_name: app
+    volumes:
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+    command: npm run dev
+    ports:
+      - 4000:4000
+      - 5555:5555
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://root:12345@postgres:5432/musicapp?schema=public

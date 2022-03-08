@@ -1,12 +1,16 @@
 {
   "dependencies": {
     "dotenv": "^16.0.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
-    "dev":"NODE_ENV=dev npx nodemon ./src/index.js"
+    "run-dev": "NODE_ENV=dev npx nodemon ./src/index.js",
+    "prisma":"npx prisma studio",
+    "dev":"npm-run-all -p -r run-dev prisma"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "prisma": "^3.10.0"
   }
 }
