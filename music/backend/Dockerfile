@@ -10,6 +10,7 @@ COPY ./src /app/src
 
 RUN npx prisma init
 COPY ./prisma /app/prisma
+RUN npx prisma generate
 
 EXPOSE 4000
 
