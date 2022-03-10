@@ -1,4 +1,5 @@
 const express = require("express")
+const { upload } = require("../libs/aws-s3")
 const SongService = require("../services/songs")
 
 function songs(app){
@@ -16,6 +17,11 @@ function songs(app){
         console.log(req.body)
         const song = await songService.create(req.body)
         return res.json(song)
+    })
+    router.post("/caratula",upload.single("img"),async (req,res)=>{
+        console.log(req.file)
+        console.log(req.body)
+        return res.json({"success":true})
     })
     router.put("/:id",async (req,res)=>{
         const id = Number.parseInt(req.params.id)
