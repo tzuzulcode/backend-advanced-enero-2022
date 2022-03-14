@@ -1,5 +1,6 @@
 const {PrismaClient} = require("@prisma/client")
 const prisma = new PrismaClient()
+const {uploadFile} = require("../libs/aws-s3")
 
 
 class Songs{
@@ -11,7 +12,9 @@ class Songs{
         })
         return songs
     }
-    async create(song){
+    async create(song,cover){
+        await uploadFile(cover.buffer,cover.originalname)
+        
         const newSong = await prisma.song.create({
             data:song
         })

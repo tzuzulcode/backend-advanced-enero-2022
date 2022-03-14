@@ -1,6 +1,7 @@
 const express = require("express")
-const { upload } = require("../libs/aws-s3")
+const { upload } = require("../middleware/upload")
 const SongService = require("../services/songs")
+const {uploadFile} = require("../libs/aws-s3")
 
 function songs(app){
     const router = express.Router()
@@ -13,14 +14,13 @@ function songs(app){
         const songs = await songService.getAll()
         return res.json(songs)
     })
-    router.post("/",async (req,res)=>{
-        console.log(req.body)
-        const song = await songService.create(req.body)
+    router.post("/",upload.single("img"),async (req,res)=>{
+        const song = await songService.create(req.body,req.file)
         return res.json(song)
     })
     router.post("/caratula",upload.single("img"),async (req,res)=>{
-        console.log(req.file)
-        console.log(req.body)
+        const result = await uploadFile(req.file.buffer,req.file.originalname)
+        console.log(result)
         return res.json({"success":true})
     })
     router.put("/:id",async (req,res)=>{

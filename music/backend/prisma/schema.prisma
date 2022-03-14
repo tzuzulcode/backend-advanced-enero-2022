@@ -22,10 +22,20 @@ model Author{
   songs Song[]
 }
 
+model File{
+  id Int @id @default(autoincrement())
+  key String
+  bucket String
+  location String
+  songs Song[]
+}
+
 model Song{
   id Int @id @default(autoincrement())
   title String
   genre String
   authorId Int
   author Author @relation(fields: [authorId],references: [id])
+  fileId Int?
+  file File? @relation(fields: [fileId],references: [id])
 }
