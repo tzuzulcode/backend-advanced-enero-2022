@@ -1,7 +1,6 @@
 const express = require("express")
 const { upload } = require("../middleware/upload")
 const SongService = require("../services/songs")
-const {uploadFile} = require("../libs/aws-s3")
 
 function songs(app){
     const router = express.Router()
