@@ -13,13 +13,62 @@ class Songs{
         return songs
     }
     async create(song,cover){
-        await uploadFile(cover.buffer,cover.originalname)
-        
+        if(cover){
+            
+            const result = await uploadFile(cover.buffer,cover.originalname)
+            const newSong = await prisma.song.create({
+                data:{
+                    title:song.title,
+                    genre:song.genre,
+                    author:{
+                        connect:{
+                            id:Number(song.author)
+                        }
+                    },
+                    file:{
+                        create:{
+                            key:result.Key,
+                            bucket:result.Bucket,
+                            location:result.Location
+                        }
+                    }
+                },
+                include:{
+                    author:true,
+                    file:true
+                }
+            })
+
+            return newSong
+        }
+
         const newSong = await prisma.song.create({
-            data:song
+            data:{
+                title:song.title,
+                genre:song.genre,
+                author:{
+                    connect:{
+                        id:Number(song.author)
+                    }
+                },
+                file:{
+                    connect:{
+                        id:Number(song.coverId)
+                    }
+                }
+            },
+            include:{
+                author:true,
+                file:true
+            }
         })
 
         return newSong
+
+
+        
+
+        
     }
 
     async update(id,data){
