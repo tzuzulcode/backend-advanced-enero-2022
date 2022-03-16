@@ -13,17 +13,41 @@ class Songs{
         return songs
     }
     async create(song,cover){
+        const genres = song.genres.map(genre=>{
+            return {
+                genre:{
+                    connect:{
+                        id:Number(genre)
+                    }
+                }
+            }
+        })
+        const coauthors = song.coauthors.map(coauthor=>{
+            return {
+                author:{
+                    connect:{
+                        id:Number(coauthor)
+                    }
+                }
+            }
+        })
+
         if(cover){
             
             const result = await uploadFile(cover.buffer,cover.originalname)
             const newSong = await prisma.song.create({
                 data:{
                     title:song.title,
-                    genre:song.genre,
+                    genres:{
+                        create:genres
+                    },
                     author:{
                         connect:{
                             id:Number(song.author)
                         }
+                    },
+                    coauthors:{
+                        create:coauthors
                     },
                     file:{
                         create:{

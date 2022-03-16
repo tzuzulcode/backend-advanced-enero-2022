@@ -20,6 +20,39 @@ model Author{
   id Int @id @default(autoincrement())
   name String
   songs Song[]
+  albums Album[]
+  coauthorIn Coauthors[]
+}
+
+model Coauthors{
+  @@id([idAuthor,idSong])
+  idAuthor Int
+  author Author @relation(fields: [idAuthor],references: [id])
+  idSong Int
+  song Song @relation(fields: [idSong],references: [id])
+}
+model GenresSongs{
+  @@id([idGenre,idSong])
+  idGenre Int
+  genre Genre @relation(fields: [idGenre],references: [id])
+  idSong Int
+  song Song @relation(fields: [idSong],references: [id])
+}
+
+model Album{
+  id Int @id @default(autoincrement())
+  name String
+  year Int
+  date DateTime
+  idAuthor Int
+  author Author @relation(fields: [idAuthor],references: [id])
+  songs Song[]
+}
+
+model Genre{
+  id Int @id @default(autoincrement())
+  name String
+  songs GenresSongs[]
 }
 
 model File{
@@ -33,9 +66,12 @@ model File{
 model Song{
   id Int @id @default(autoincrement())
   title String
-  genre String
+  genres GenresSongs[]
   authorId Int
   author Author @relation(fields: [authorId],references: [id])
+  coauthors Coauthors[]
   fileId Int?
   file File? @relation(fields: [fileId],references: [id])
+  albumId Int?
+  album Album? @relation(fields: [albumId],references: [id])
 }
