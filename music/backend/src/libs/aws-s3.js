@@ -3,6 +3,7 @@ const AWS = require("aws-sdk")
 const { aws_bucket_name } = require("../config")
 const s3 = new AWS.S3()
 const uuid = require("uuid")
+const { resolve } = require("path")
 
 function uploadFile(file,name){
     const ext = path.extname(name)
@@ -23,4 +24,19 @@ function uploadFile(file,name){
     
 }
 
-module.exports = {uploadFile}
+function downloadFile(key){
+    return new Promise((resolve,reject)=>{
+        s3.getObject({
+            Key:key,
+            Bucket:aws_bucket_name,
+        },(err,data)=>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(data)
+            }
+        })
+    })
+}
+
+module.exports = {uploadFile,downloadFile}

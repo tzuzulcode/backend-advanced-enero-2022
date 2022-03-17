@@ -1,9 +1,25 @@
 const {PrismaClient} = require("@prisma/client")
 const prisma = new PrismaClient()
-const {uploadFile} = require("../libs/aws-s3")
+const {uploadFile, downloadFile} = require("../libs/aws-s3")
 
 
 class Songs{
+
+    async getAudio(id){
+        const song = await prisma.song.findUnique({
+            where:{
+                id:Number.parseInt(id)
+            },
+            include:{
+                file:true
+            }
+        })
+
+        const audio = downloadFile(song.file.key)
+
+        return audio
+    }
+
     async getAll(){
         const songs = await prisma.song.findMany({
             include:{
@@ -12,8 +28,25 @@ class Songs{
         })
         return songs
     }
-    async create(song,cover){
-        const genres = song.genres.map(genre=>{
+
+    async uploadAudio(id,file,fileName){
+        const uploaded = await uploadFile(file,fileName)
+        const updated = await this.update(id,{
+            file:{
+                create:{
+                    key:uploaded.Key,
+                    bucket:uploaded.Bucket,
+                    location:uploaded.Location
+                }
+            }
+        })
+
+
+        return updated
+    }
+
+    async create(song){
+        const genres = song.genres?.map(genre=>{
             return {
                 genre:{
                     connect:{
@@ -22,7 +55,7 @@ class Songs{
                 }
             }
         })
-        const coauthors = song.coauthors.map(coauthor=>{
+        const coauthors = song.coauthors?.map(coauthor=>{
             return {
                 author:{
                     connect:{
@@ -32,52 +65,23 @@ class Songs{
             }
         })
 
-        if(cover){
-            
-            const result = await uploadFile(cover.buffer,cover.originalname)
-            const newSong = await prisma.song.create({
-                data:{
-                    title:song.title,
-                    genres:{
-                        create:genres
-                    },
-                    author:{
-                        connect:{
-                            id:Number(song.author)
-                        }
-                    },
-                    coauthors:{
-                        create:coauthors
-                    },
-                    file:{
-                        create:{
-                            key:result.Key,
-                            bucket:result.Bucket,
-                            location:result.Location
-                        }
-                    }
-                },
-                include:{
-                    author:true,
-                    file:true
-                }
-            })
-
-            return newSong
-        }
-
         const newSong = await prisma.song.create({
             data:{
                 title:song.title,
-                genre:song.genre,
+                genres:{
+                    create:genres
+                },
                 author:{
                     connect:{
                         id:Number(song.author)
                     }
                 },
-                file:{
+                coauthors:{
+                    create:coauthors
+                },
+                album:{
                     connect:{
-                        id:Number(song.coverId)
+                        id:Number(song.album)
                     }
                 }
             },
@@ -87,12 +91,7 @@ class Songs{
             }
         })
 
-        return newSong
-
-
-        
-
-        
+        return newSong        
     }
 
     async update(id,data){

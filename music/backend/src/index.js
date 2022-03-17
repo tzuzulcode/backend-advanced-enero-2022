@@ -1,4 +1,5 @@
 const express = require("express")
+const cors = require("cors")
 const { port, env } = require("./config")
 
 //Routes import:
@@ -7,6 +8,9 @@ const authors = require("./routes/authors")
 
 const app = express()
 
+app.use(cors({
+    origin:["http://localhost:5500"]
+}))
 app.use(express.json())
 
 songs(app)
