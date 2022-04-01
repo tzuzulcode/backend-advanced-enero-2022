@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
-const { uploadFile, downloadFile } = require("../libs/aws-s3")
+const { uploadFile, downloadFile } = require("./libs/aws-s3")
 
 
 class Songs {

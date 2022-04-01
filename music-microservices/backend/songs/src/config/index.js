@@ -1,6 +1,8 @@
 require("dotenv").config({
-    path: process.cwd() + "/src/.env"
+    path: process.cwd() + "/.env"
 })
+
+console.log(process.env.PORT)
 
 const config = {
     env: process.env.NODE_ENV,
