@@ -23,7 +23,7 @@ class Songs {
   async getAll() {
     const songs = await prisma.song.findMany({
       include: {
-        author: true
+        file: true
       }
     })
     return songs
@@ -46,47 +46,12 @@ class Songs {
   }
 
   async create(song) {
-    const genres = song.genres?.map(genre => {
-      return {
-        genre: {
-          connect: {
-            id: Number(genre)
-          }
-        }
-      }
-    })
-    const coauthors = song.coauthors?.map(coauthor => {
-      return {
-        author: {
-          connect: {
-            id: Number(coauthor)
-          }
-        }
-      }
-    })
 
     const newSong = await prisma.song.create({
       data: {
         title: song.title,
-        genres: {
-          create: genres
-        },
-        author: {
-          connect: {
-            id: Number(song.author)
-          }
-        },
-        coauthors: {
-          create: coauthors
-        },
-        album: {
-          connect: {
-            id: Number(song.album)
-          }
-        }
       },
       include: {
-        author: true,
         file: true
       }
     })

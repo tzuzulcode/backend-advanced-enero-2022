@@ -1,6 +1,7 @@
 require("dotenv").config({
     path: process.cwd() + "/.env"
 })
+console.log("path", process.cwd())
 
 console.log(process.env.PORT)
 
