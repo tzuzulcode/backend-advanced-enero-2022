@@ -4,15 +4,47 @@ metadata:
   name: songs
 spec:
   containers:
-    - image: songs-ms
+    - image: songs-ms:1.1
       resources:
-        limits:
+        requests:
           memory: "128Mi"
           cpu: "500m"
+        limits:
+          memory: "256Mi"
+          cpu: "1000m"
       name: songs-ms
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 4000
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
       ports:
         - containerPort: 4000
           name: http
           protocol: TCP
       imagePullPolicy: IfNotPresent
 
+    - image: postgres
+      name: songs-db
+      env:
+        - name: POSTGRES_USER
+          value: "root"
+        - name: POSTGRES_PASSWORD
+          value: "12345"
+        - name: POSTGRES_DB
+          value: "musicapp"
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "500m"
+        limits:
+          memory: "256Mi"
+          cpu: "1000m"
+      ports:
+        - containerPort: 5432
+          name: http
+          protocol: TCP
+      imagePullPolicy: IfNotPresent

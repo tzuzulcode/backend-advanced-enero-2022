@@ -10,6 +10,10 @@ app.use(express.json())
 
 songs(app)
 
+app.get("/", (req, res) => {
+  return res.json({ hola: "mundo" })
+})
+
 
 app.listen(4000, () => {
   console.log('listening on: http://localhost:' + port)
