@@ -2,3 +2,4 @@ node_modules
 dbdata
 /graphql/dbdata
 .env
+env.yaml

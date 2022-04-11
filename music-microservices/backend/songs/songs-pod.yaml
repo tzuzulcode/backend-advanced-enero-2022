@@ -2,31 +2,10 @@ apiVersion: v1
 kind: Pod #Tipo de recurso
 metadata:
   name: songs
+  labels:
+    microServiceName: songs
 spec:
   containers:
-    - image: songs-ms:1.1
-      resources:
-        requests:
-          memory: "128Mi"
-          cpu: "500m"
-        limits:
-          memory: "256Mi"
-          cpu: "1000m"
-      name: songs-ms
-      livenessProbe:
-        httpGet:
-          path: /
-          port: 4000
-        initialDelaySeconds: 5
-        timeoutSeconds: 1
-        periodSeconds: 10
-        failureThreshold: 3
-      ports:
-        - containerPort: 4000
-          name: http
-          protocol: TCP
-      imagePullPolicy: IfNotPresent
-
     - image: postgres
       name: songs-db
       env:
@@ -48,3 +27,37 @@ spec:
           name: http
           protocol: TCP
       imagePullPolicy: IfNotPresent
+
+    - name: songs-ms
+      image: songs-ms:1.3
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 4000
+          name: http
+          protocol: TCP
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "500m"
+        limits:
+          memory: "256Mi"
+          cpu: "1000m"
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 4000
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+      env:
+        - name: PORT
+          valueFrom:
+            secretKeyRef:
+              name: env
+              key: PORT
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: env
+              key: DATABASE_URL
